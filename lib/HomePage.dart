@@ -1,6 +1,7 @@
 // ignore_for_file: file_names, prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 import 'package:flutter/material.dart';
+import 'package:fit_app/PesquisaReceita.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -10,11 +11,11 @@ class HomePage extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.grey.shade100,
       appBar: AppBar(
-        title: const Text("fit.app"),
+        title: const Text("receitas.app"),
         backgroundColor: Colors.deepOrange,
         foregroundColor: Colors.white,
         actions: const [
-          Icon(Icons.fitness_center),
+          Icon(Icons.restaurant_menu),
           SizedBox(width: 16),
         ],
       ),
@@ -34,7 +35,7 @@ class HomePage extends StatelessWidget {
                   const CircleAvatar(
                     radius: 32,
                     backgroundColor: Colors.deepOrange,
-                    child: Icon(Icons.person, color: Colors.white, size: 32),
+                    child: Icon(Icons.ramen_dining, color: Colors.white, size: 32),
                   ),
                   const SizedBox(width: 16),
                   Expanded(
@@ -50,13 +51,48 @@ class HomePage extends StatelessWidget {
                         ),
                         SizedBox(height: 4),
                         Text(
-                          "Pronto para treinar hoje?",
+                          "O que vamos cozinhar hoje?",
                           style: TextStyle(fontSize: 14, color: Colors.black54),
                         ),
                       ],
                     ),
                   ),
                 ],
+              ),
+            ),
+            const SizedBox(height: 20),
+            InkWell(
+              onTap: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (_) => const PesquisaReceita(),
+                  ),
+                );
+              },
+              borderRadius: BorderRadius.circular(20),
+              child: Container(
+                padding: const EdgeInsets.all(20),
+                decoration: BoxDecoration(
+                  color: Colors.deepOrange,
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Row(
+                  children: const [
+                    Icon(Icons.search, color: Colors.white),
+                    SizedBox(width: 12),
+                    Expanded(
+                      child: Text(
+                        "Pesquisar Receita",
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                    Icon(Icons.chevron_right, color: Colors.white),
+                  ],
+                ),
               ),
             ),
             const SizedBox(height: 20),
@@ -71,27 +107,28 @@ class HomePage extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Text(
-                    "Resumo de Hoje",
+                    "Categorias",
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 16),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: const [
-                      _Metrica(
-                        icone: Icons.directions_walk,
-                        valor: "7.482",
-                        rotulo: "Passos",
+                      _Categoria(
+                        icone: Icons.cake,
+                        rotulo: "Doces",
                       ),
-                      _Metrica(
-                        icone: Icons.local_fire_department,
-                        valor: "520",
-                        rotulo: "Kcal",
+                      _Categoria(
+                        icone: Icons.lunch_dining,
+                        rotulo: "Salgadas",
                       ),
-                      _Metrica(
-                        icone: Icons.timer,
-                        valor: "48",
-                        rotulo: "Minutos",
+                      _Categoria(
+                        icone: Icons.local_drink,
+                        rotulo: "Bebidas",
+                      ),
+                      _Categoria(
+                        icone: Icons.eco,
+                        rotulo: "Vegano",
                       ),
                     ],
                   ),
@@ -111,10 +148,10 @@ class HomePage extends StatelessWidget {
                 children: [
                   Row(
                     children: const [
-                      Icon(Icons.sports_gymnastics, color: Colors.teal),
+                      Icon(Icons.star, color: Colors.teal),
                       SizedBox(width: 8),
                       Text(
-                        "Treino de Hoje",
+                        "Receita em Destaque",
                         style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
@@ -124,12 +161,12 @@ class HomePage extends StatelessWidget {
                   ),
                   const SizedBox(height: 12),
                   const Text(
-                    "Full Body - Nível Intermediário",
+                    "Lasanha à Bolonhesa",
                     style: TextStyle(fontSize: 16),
                   ),
                   const SizedBox(height: 4),
                   const Text(
-                    "8 exercícios · 45 minutos",
+                    "12 ingredientes · 60 minutos",
                     style: TextStyle(fontSize: 14, color: Colors.black54),
                   ),
                 ],
@@ -148,10 +185,10 @@ class HomePage extends StatelessWidget {
                 children: [
                   Row(
                     children: const [
-                      Icon(Icons.calendar_today, color: Colors.blue),
+                      Icon(Icons.favorite, color: Colors.blue),
                       SizedBox(width: 8),
                       Text(
-                        "Progresso Semanal",
+                        "Favoritas da Semana",
                         style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
@@ -160,10 +197,10 @@ class HomePage extends StatelessWidget {
                     ],
                   ),
                   const SizedBox(height: 12),
-                  const Text("4 de 5 treinos concluídos"),
+                  const Text("3 receitas salvas"),
                   const SizedBox(height: 8),
                   const Text(
-                    "Falta apenas 1 treino para atingir a meta semanal!",
+                    "Panqueca de banana, Brigadeiro gourmet e Risoto de cogumelos.",
                     style: TextStyle(fontSize: 14, color: Colors.black54),
                   ),
                 ],
@@ -176,14 +213,12 @@ class HomePage extends StatelessWidget {
   }
 }
 
-class _Metrica extends StatelessWidget {
+class _Categoria extends StatelessWidget {
   final IconData icone;
-  final String valor;
   final String rotulo;
 
-  const _Metrica({
+  const _Categoria({
     required this.icone,
-    required this.valor,
     required this.rotulo,
   });
 
@@ -194,13 +229,8 @@ class _Metrica extends StatelessWidget {
         Icon(icone, size: 32, color: Colors.deepOrange),
         const SizedBox(height: 8),
         Text(
-          valor,
-          style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-        ),
-        const SizedBox(height: 4),
-        Text(
           rotulo,
-          style: const TextStyle(fontSize: 12, color: Colors.black54),
+          style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
         ),
       ],
     );
