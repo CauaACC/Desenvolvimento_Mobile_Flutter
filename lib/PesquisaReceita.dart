@@ -1,6 +1,7 @@
 // ignore_for_file: file_names
 
 import 'package:flutter/material.dart';
+import 'package:fit_app/Receita.dart';
 
 class PesquisaReceita extends StatefulWidget {
   const PesquisaReceita({super.key});
@@ -55,6 +56,13 @@ class _PesquisaReceitaState extends State<PesquisaReceita> {
 
   @override
   Widget build(BuildContext context) {
+    final termo = _termoPesquisado;
+    final resultados = termo == null
+        ? const <Receita>[]
+        : receitas
+            .where((r) => r.nome.toLowerCase().contains(termo.toLowerCase()))
+            .toList();
+
     return Scaffold(
       backgroundColor: Colors.grey.shade100,
       appBar: AppBar(
@@ -129,7 +137,8 @@ class _PesquisaReceitaState extends State<PesquisaReceita> {
               ),
             ),
             const SizedBox(height: 20),
-            if (_termoPesquisado != null) _ResultadoPesquisa(termo: _termoPesquisado!),
+            if (termo != null)
+              _ResultadoPesquisa(termo: termo, resultados: resultados),
           ],
         ),
       ),
@@ -139,8 +148,12 @@ class _PesquisaReceitaState extends State<PesquisaReceita> {
 
 class _ResultadoPesquisa extends StatelessWidget {
   final String termo;
+  final List<Receita> resultados;
 
-  const _ResultadoPesquisa({required this.termo});
+  const _ResultadoPesquisa({
+    required this.termo,
+    required this.resultados,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -154,8 +167,8 @@ class _ResultadoPesquisa extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            children: const [
+          const Row(
+            children: [
               Icon(Icons.restaurant_menu, color: Colors.teal),
               SizedBox(width: 8),
               Text(
@@ -169,11 +182,60 @@ class _ResultadoPesquisa extends StatelessWidget {
             "Termo pesquisado: \"$termo\"",
             style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
           ),
-          const SizedBox(height: 8),
-          const Text(
-            "Resultados provisórios — a listagem de receitas será integrada em seguida.",
-            style: TextStyle(fontSize: 14, color: Colors.black54),
-          ),
+          const SizedBox(height: 12),
+          if (resultados.isEmpty)
+            const Text(
+              "Nenhuma receita encontrada com esse nome.",
+              style: TextStyle(fontSize: 14, color: Colors.black54),
+            )
+          else
+            for (final receita in resultados)
+              Padding(
+                padding: const EdgeInsets.only(bottom: 8),
+                child: InkWell(
+                  borderRadius: BorderRadius.circular(12),
+                  onTap: () {
+                    Navigator.of(context)
+                        .pushNamed("/detalhe", arguments: receita);
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(color: Colors.teal.shade200),
+                    ),
+                    child: Row(
+                      children: [
+                        Icon(receita.icone, color: Colors.teal),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                receita.nome,
+                                style: const TextStyle(
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              Text(
+                                "${receita.categoria} · ${receita.tempoMinutos} min",
+                                style: const TextStyle(
+                                  fontSize: 13,
+                                  color: Colors.black54,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        const Icon(Icons.chevron_right, color: Colors.teal),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
         ],
       ),
     );
